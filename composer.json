@@ -1,0 +1,38 @@
+{
+    "name": "benjamin-rqt/data-watcher-bundle",
+    "description": "Symfony bundle for database anomaly detection with email notifications",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Benjamin Rouquet",
+            "email": "brouquet@benjamin-rqt.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "BenjaminRqt\\DataWatcherBundle\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=8.2",
+        "symfony/framework-bundle": "^6.3|^7.0|^8.0",
+        "symfony/mailer": "^6.3|^7.0|^8.0",
+        "symfony/messenger": "^6.3|^7.0|^8.0",
+        "symfony/scheduler": "^6.3|^7.0|^8.0",
+        "symfony/twig-bundle": "^6.3|^7.0|^8.0",
+        "doctrine/orm": "^2.15|^3.0",
+        "doctrine/dbal": "^3.0|^4.0",
+        "dragonmantank/cron-expression": "^3.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^6.3|^7.0|^8.0",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2.1"
+    },
+    "extra": {
+        "symfony": {
+            "require": "^6.3|^7.0|^8.0"
+        }
+    }
+}

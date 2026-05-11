@@ -1,0 +1,31 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    BenjaminRqt\DataWatcherBundle\:
+        resource: '../src/'
+        exclude:
+            - '../src/Entity/'
+
+    benjamin_rqt.data_watcher.check_registry:
+        class: BenjaminRqt\DataWatcherBundle\CheckRegistry
+        public: true
+        arguments:
+            - !tagged_iterator data_watcher.check
+
+    BenjaminRqt\DataWatcherBundle\CheckRegistry:
+        alias: benjamin_rqt.data_watcher.check_registry
+        public: true
+
+    benjamin_rqt.data_watcher.notifier.email_notifier:
+        class: BenjaminRqt\DataWatcherBundle\Notifier\EmailNotifier
+        public: false
+        arguments:
+            $from: ~
+            $defaultRecipients: ~
+            $appName: ~
+
+    BenjaminRqt\DataWatcherBundle\Notifier\EmailNotifier:
+        alias: benjamin_rqt.data_watcher.notifier.email_notifier
+

@@ -2,6 +2,9 @@
 
 Symfony bundle for database anomaly detection with email notifications and execution history.
 
+<img width="500" height="500" alt="ChatGPT Image 5 juin 2026, 15_14_45" src="https://github.com/user-attachments/assets/83fd00cc-d63c-4c7f-869b-1b8093b993be" />
+
+
 ## Requirements
 
 - PHP >= 8.2

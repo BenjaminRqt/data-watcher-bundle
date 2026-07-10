@@ -5,25 +5,24 @@ namespace BenjaminRqt\DataWatcherBundle\Tests;
 use BenjaminRqt\DataWatcherBundle\Check\CheckInterface;
 use BenjaminRqt\DataWatcherBundle\Check\CheckResult;
 use BenjaminRqt\DataWatcherBundle\CheckRunner;
-use BenjaminRqt\DataWatcherBundle\Entity\DataWatcherRun;
 use BenjaminRqt\DataWatcherBundle\Notifier\EmailNotifier;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class CheckRunnerTest extends TestCase
 {
     private EmailNotifier $notifier;
-    private EntityManagerInterface $em;
+    private Connection $connection;
     private LoggerInterface $logger;
     private CheckRunner $runner;
 
     protected function setUp(): void
     {
         $this->notifier = $this->createMock(EmailNotifier::class);
-        $this->em = $this->createMock(EntityManagerInterface::class);
+        $this->connection = $this->createMock(Connection::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->runner = new CheckRunner($this->notifier, $this->em, $this->logger);
+        $this->runner = new CheckRunner($this->notifier, $this->connection, $this->logger);
     }
 
     public function testRunSuccess(): void
@@ -32,8 +31,7 @@ class CheckRunnerTest extends TestCase
         $check->method('getName')->willReturn('test-check');
         $check->method('run')->willReturn(CheckResult::ok());
 
-        $this->em->expects($this->once())->method('persist')->with($this->isInstanceOf(DataWatcherRun::class));
-        $this->em->expects($this->once())->method('flush');
+        $this->connection->expects($this->once())->method('insert')->with('data_watcher_run', $this->isType('array'));
 
         $run = $this->runner->run($check);
 
@@ -55,8 +53,7 @@ class CheckRunnerTest extends TestCase
             ->method('notify')
             ->with($check, $result);
 
-        $this->em->expects($this->once())->method('persist');
-        $this->em->expects($this->once())->method('flush');
+        $this->connection->expects($this->once())->method('insert');
 
         $run = $this->runner->run($check);
 
@@ -75,6 +72,7 @@ class CheckRunnerTest extends TestCase
         $check->method('run')->willReturn($result);
 
         $this->notifier->expects($this->never())->method('notify');
+        $this->connection->expects($this->once())->method('insert');
 
         $run = $this->runner->run($check);
 
@@ -90,6 +88,8 @@ class CheckRunnerTest extends TestCase
         $this->logger->expects($this->once())
             ->method('error')
             ->with($this->stringContains('Error "{name}"'), $this->anything());
+
+        $this->connection->expects($this->once())->method('insert');
 
         $run = $this->runner->run($check);
 

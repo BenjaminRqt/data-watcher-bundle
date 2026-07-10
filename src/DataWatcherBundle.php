@@ -29,30 +29,6 @@ class DataWatcherBundle extends AbstractBundle implements PrependExtensionInterf
                 ],
             ]);
         }
-
-        if ($builder->hasExtension('doctrine')) {
-            $builder->prependExtensionConfig('doctrine', [
-                'orm' => [
-                    'mappings' => [
-                        'DataWatcherBundle' => [
-                            'is_bundle' => false,
-                            'type' => 'attribute',
-                            'dir' => dirname(__DIR__) . '/src/Entity',
-                            'prefix' => 'BenjaminRqt\DataWatcherBundle\Entity',
-                            'alias' => 'DataWatcher',
-                        ],
-                    ],
-                ],
-            ]);
-        }
-
-        if ($builder->hasExtension('doctrine_migrations')) {
-            $builder->prependExtensionConfig('doctrine_migrations', [
-                'migrations_paths' => [
-                    'BenjaminRqt\DataWatcherBundle\Migrations' => dirname(__DIR__) . '/migrations',
-                ],
-            ]);
-        }
     }
 
     public function configure(DefinitionConfigurator $definition): void
@@ -97,8 +73,7 @@ class DataWatcherBundle extends AbstractBundle implements PrependExtensionInterf
         return dirname(__DIR__);
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
-        // TODO: Implement prepend() method.
     }
 }

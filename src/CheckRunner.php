@@ -5,14 +5,14 @@ namespace BenjaminRqt\DataWatcherBundle;
 use BenjaminRqt\DataWatcherBundle\Check\CheckInterface;
 use BenjaminRqt\DataWatcherBundle\Entity\DataWatcherRun;
 use BenjaminRqt\DataWatcherBundle\Notifier\EmailNotifier;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
 class CheckRunner
 {
     public function __construct(
         private EmailNotifier $notifier,
-        private EntityManagerInterface $em,
+        private Connection $connection,
         private LoggerInterface $logger,
     ) {
     }
@@ -58,8 +58,16 @@ class CheckRunner
             ]);
         }
 
-        $this->em->persist($run);
-        $this->em->flush();
+        $this->connection->insert('data_watcher_run', [
+            'check_name'        => $run->getCheckName(),
+            'status'            => $run->getStatus(),
+            'anomaly_count'     => $run->getAnomalyCount(),
+            'message'           => $run->getMessage(),
+            'rows_sample'       => $run->getRowsSample() ? json_encode($run->getRowsSample()) : null,
+            'error_message'     => $run->getErrorMessage(),
+            'executed_at'       => $run->getExecutedAt()->format('Y-m-d H:i:s'),
+            'execution_time_ms' => $run->getExecutionTimeMs(),
+        ]);
 
         return $run;
     }

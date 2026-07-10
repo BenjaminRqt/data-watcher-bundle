@@ -18,10 +18,10 @@ Symfony bundle for database anomaly detection with email notifications and execu
 - twig-bundle
 - scheduler
 
-### Doctrine    
+### Doctrine
 
-- doctrine/orm ^2.15 or ^3.0
 - doctrine/dbal ^3.0 or ^4.0
+- (Optional) doctrine/orm (if you use `AbstractDoctrineCheck`)
 
 ### External dependencies
 
@@ -91,10 +91,12 @@ MAILER_DSN=smtp://user:password@smtp.myserver.com:587
 MESSENGER_TRANSPORT_DSN=doctrine://default
 ```
 
-### 7. Apply migrations
+### 7. Setup the database table
+
+This bundle uses a custom table `data_watcher_run` to store the history of checks. Run the following command to create it:
 
 ```bash
-php bin/console doctrine:migrations:migrate
+php bin/console data-watcher:setup
 ```
 
 ---
@@ -210,6 +212,9 @@ public function getRecipients(): array
 ## Available commands
 
 ```bash
+# Setup the database table for history
+php bin/console data-watcher:setup
+
 # List all registered checks
 php bin/console data-watcher:run --list
 

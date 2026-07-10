@@ -2,48 +2,31 @@
 
 namespace BenjaminRqt\DataWatcherBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity]
-#[ORM\Table(name: 'data_watcher_run')]
-#[ORM\Index(name: 'idx_dwrun_check_name', columns: ['check_name'])]
-#[ORM\Index(name: 'idx_dwrun_executed_at', columns: ['executed_at'])]
 class DataWatcherRun
 {
-    public const string STATUS_SUCCESS = 'success';
-    public const string STATUS_ANOMALY = 'anomaly';
-    public const string STATUS_ERROR   = 'error';
+    public const STATUS_SUCCESS = 'success';
+    public const STATUS_ANOMALY = 'anomaly';
+    public const STATUS_ERROR   = 'error';
 
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'check_name', type: 'string', length: 255)]
     private string $checkName;
 
-    #[ORM\Column(type: 'string', length: 20)]
     private string $status;
 
-    #[ORM\Column(type: 'integer')]
     private int $anomalyCount;
 
-    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $message = null;
 
     /**
      * @var array<int, array<string, scalar|null>>|null
      */
-    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $rowsSample = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $errorMessage = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $executedAt;
 
-    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $executionTimeMs = null;
 
     public function __construct(string $checkName)
